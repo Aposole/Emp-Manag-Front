@@ -1,0 +1,63 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="color:white;">Project Manager</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
+      aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarColor02">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" (click)="openModal(null, 'add')">Add Project <span class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input type="search" (ngModelChange)="searchProjects(key.value)" #key="ngModel" ngModel name="key"
+          id="searchName" class="form-control mr-sm-2" placeholder="Search projects..." required>
+      </form>
+    </div>
+  </nav>
+  
+  <div class="container" id="main-container">
+    <div class="row">
+      <div *ngFor="let project of projects" class="col-md-6 col-xl-3">
+        <div class="card m-b-30">
+          <div class="card-body row">
+            <div class="col-12 card-title align-self-center mb-0">
+              <h5>{{ project?.project_name }}</h5>
+              <p class="m-0">Employees: {{ project?.nb_employees }}</p>
+            </div>
+          </div>
+          <ul class="list-group list-group-flush">
+            <!-- If you want to display specific project details here, modify this section accordingly -->
+          </ul>
+          <div class="card-body">
+            <div class="float-right btn-group btn-group-sm">
+              <a (click)="openModal(project, 'edit')" class="btn btn-primary tooltips" data-placement="top"
+                data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+              <a (click)="openModal(project, 'delete')" class="btn btn-secondary tooltips" data-placement="top"
+                data-original-title="Delete"><i class="fa fa-times"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Add Project Modal -->
+    <!-- Add the modal structure for adding projects similarly to the one provided for employees -->
+  
+    <!-- Edit Modal -->
+    <!-- Add the modal structure for editing projects similarly to the one provided for employees -->
+  
+    <!-- Delete Modal -->
+    <!-- Add the modal structure for deleting projects similarly to the one provided for employees -->
+  
+  </div>
+  
+  <!-- Notification for no projects -->
+  <div *ngIf="projects?.length === 0" class="col-lg-12 col-md-12 col-xl-12">
+    <div class="alert alert-info" role="alert">
+      <h4 class="alert-heading">NO PROJECTS!</h4>
+      <p>No Projects were found.</p>
+    </div>
+  </div>
+  
