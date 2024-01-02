@@ -33,9 +33,8 @@ export class AppComponent implements OnInit {
   }
 
   public onAddEmployee(addForm: NgForm): void {
-    const addEmployeeForm = document.getElementById('add-employee-form');
-    if (addEmployeeForm) {
-      addEmployeeForm.click();
+    document.getElementById('add-employee-form')?.click()
+    
       this.employeeService.addEmployee(addForm.value).subscribe(
         (response: Employee) => {
           console.log(response);
@@ -47,11 +46,9 @@ export class AppComponent implements OnInit {
           addForm.reset();
         }
       );
-    } else {
-      // Handle the case where the element is not found
-      console.error("Element 'add-employee-form' not found");
-    }
-  }
+    } 
+    
+  
 
   public onUpdateEmloyee(employee: Employee): void {
     this.employeeService.updateEmployee(employee).subscribe(
@@ -102,28 +99,29 @@ export class AppComponent implements OnInit {
 
   public onOpenModal(employee: Employee | null, mode: string): void {
     const container = document.getElementById('main-container');
-    if (employee) {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.style.display = 'none';
-      button.setAttribute('data-toggle', 'modal');
-      
-      if (mode === 'add') {
-        button.setAttribute('data-target', '#addEmployeeModal');
-      } else if (mode === 'edit') {
-        this.editEmployee = employee;
-        button.setAttribute('data-target', '#updateEmployeeModal');
-      } else if (mode === 'delete') {
-        this.deleteEmployee = employee;
-        button.setAttribute('data-target', '#deleteEmployeeModal');
-      }
-      
-      container?.appendChild(button);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+  
+    if (mode === 'add') {
+      button.setAttribute('data-target', '#addEmployeeModal');
+    } else if (mode === 'edit' && employee !== null) {
+      this.editEmployee = employee;
+      button.setAttribute('data-target', '#updateEmployeeModal');
+    } else if (mode === 'delete' && employee !== null) {
+      this.deleteEmployee = employee;
+      button.setAttribute('data-target', '#deleteEmployeeModal');
+    }
+  
+    if (container) {
+      container.appendChild(button);
       button.click();
     } else {
-      console.log('Employee is null');
-      // Handle the case when employee is null, if needed
+      console.error("Main container element not found");
     }
   }
+  
+  
   
 }  
