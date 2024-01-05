@@ -1,5 +1,5 @@
 #1st Stage
-FROM node:latest as build-stage
+FROM node:18.17.1-buster as build-stage
 WORKDIR /app
 COPY package.json /app/
 RUN npm install
