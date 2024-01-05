@@ -22,9 +22,9 @@ pipeline {
         stage('Build & Push'){
             agent any
             steps {
-                sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/Emp-Manag-Front:$BUILD_ID .'
-                sh 'docker push $DOCKERHUB_CREDENTIALS_USR/Emp-Manag-Front:$BUILD_ID'
-                sh 'docker rmi $DOCKERHUB_CREDENTIALS_USR/Emp-Manag-Front:$BUILD_ID'
+                sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/employeemanagerapp:$BUILD_ID .'
+                sh 'docker push $DOCKERHUB_CREDENTIALS_USR/employeemanagerapp:$BUILD_ID'
+                sh 'docker rmi $DOCKERHUB_CREDENTIALS_USR/employeemanagerapp:$BUILD_ID'
 
             }
         }

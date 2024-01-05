@@ -8,6 +8,6 @@ RUN npm run build
 
 #2nd Stage to add change
 FROM nginx:latest
-COPY --from=build-stage /app/dist/Emp-Manag-Front /usr/share/nginx/emptag
+COPY --from=build-stage /app/dist/employeemanagerapp /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
