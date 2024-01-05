@@ -2,7 +2,7 @@
 FROM node:latest as build-stage
 WORKDIR /app
 COPY package.json /app/
-RUN npm install -force
+RUN npm install
 COPY . /app/
 RUN npm run build
 
@@ -11,7 +11,3 @@ FROM nginx:latest
 COPY --from=build-stage /app/dist/Emp-Manag-Front /usr/share/nginx/emptag
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
-
-
-
-
