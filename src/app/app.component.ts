@@ -10,54 +10,52 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  public employees!: Employee[];
-  public editEmployee!: Employee;
-  public deleteEmployee!: Employee;
+  title = 'employeemanagerapp';
+  public employees: Employee[] = [];
+  public editEmployee: Employee = {} as Employee;
+  public deleteEmployee: Employee = {} as Employee;
+  public searchKey = '';
 
-  constructor(private employeeService: EmployeeService){}
+  constructor(private employeeService: EmployeeService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getEmployees();
   }
 
   public getEmployees(): void {
     this.employeeService.getEmployees().subscribe(
-      (response: any) => {
+      (response: Employee[]) => {
         this.employees = response;
         console.log(this.employees);
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        console.error('Error fetching employees:', error.message);
       }
     );
   }
 
   public onAddEmployee(addForm: NgForm): void {
-    document.getElementById('add-employee-form')?.click()
-    
-      this.employeeService.addEmployee(addForm.value).subscribe(
-        (response: Employee) => {
-          console.log(response);
-          this.getEmployees();
-          addForm.reset();
-        },
-        (error: HttpErrorResponse) => {
-          alert(error.message);
-          addForm.reset();
-        }
-      );
-    } 
-    
-  
+    this.employeeService.addEmployee(addForm.value).subscribe(
+      (response: Employee) => {
+        console.log('Employee added:', response);
+        this.getEmployees();
+        addForm.reset();
+      },
+      (error: HttpErrorResponse) => {
+        console.error('Error adding employee:', error.message);
+        addForm.reset();
+      }
+    );
+  }
 
   public onUpdateEmloyee(employee: Employee): void {
     this.employeeService.updateEmployee(employee).subscribe(
       (response: Employee) => {
-        console.log(response);
+        console.log('Employee updated:', response);
         this.getEmployees();
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        console.error('Error updating employee:', error.message);
       }
     );
   }
@@ -65,37 +63,32 @@ export class AppComponent implements OnInit {
   public onDeleteEmloyee(employeeId: number | undefined): void {
     if (employeeId) {
       this.employeeService.deleteEmployee(employeeId).subscribe(
-        (response: void) => {
-          console.log(response);
+        () => {
+          console.log('Employee deleted');
           this.getEmployees();
         },
         (error: HttpErrorResponse) => {
-          alert(error.message);
+          console.error('Error deleting employee:', error.message);
         }
       );
     } else {
-      console.error("Employee ID is not defined");
-      // Handle the case where employeeId is not defined, if needed
+      console.error('Employee ID is not defined');
     }
   }
 
   public searchEmployees(key: string): void {
-    console.log(key);
-    const results: Employee[] = [];
-    for (const employee of this.employees) {
-      if (employee.name.toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || employee.email.toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || employee.phone.toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || employee.jobTitle.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
-        results.push(employee);
-      }
-    }
-    this.employees = results;
-    if (results.length === 0 || !key) {
+    if (!key) {
       this.getEmployees();
+      return;
     }
+    const results: Employee[] = this.employees.filter(employee =>
+      employee.name.toLowerCase().includes(key.toLowerCase()) ||
+      employee.email.toLowerCase().includes(key.toLowerCase()) ||
+      employee.phone.toLowerCase().includes(key.toLowerCase()) ||
+      employee.jobTitle.toLowerCase().includes(key.toLowerCase())
+    );
+    this.employees = results;
   }
-  
 
   public onOpenModal(employee: Employee | null, mode: string): void {
     const container = document.getElementById('main-container');
@@ -103,25 +96,22 @@ export class AppComponent implements OnInit {
     button.type = 'button';
     button.style.display = 'none';
     button.setAttribute('data-toggle', 'modal');
-  
+
     if (mode === 'add') {
       button.setAttribute('data-target', '#addEmployeeModal');
-    } else if (mode === 'edit' && employee !== null) {
-      this.editEmployee = employee;
+    } else if (mode === 'edit' && employee) {
+      this.editEmployee = { ...employee }; // Spread operator ensures a deep copy
       button.setAttribute('data-target', '#updateEmployeeModal');
-    } else if (mode === 'delete' && employee !== null) {
-      this.deleteEmployee = employee;
+    } else if (mode === 'delete' && employee) {
+      this.deleteEmployee = { ...employee }; // Spread operator ensures a deep copy
       button.setAttribute('data-target', '#deleteEmployeeModal');
     }
-  
+
     if (container) {
       container.appendChild(button);
       button.click();
     } else {
-      console.error("Main container element not found");
+      console.error('Main container element not found');
     }
   }
-  
-  
-  
-}  
+}
